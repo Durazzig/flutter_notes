@@ -12,6 +12,9 @@ ThemeData lightMode = ThemeData(
       color: Colors.white,
     ),
   ),
+  progressIndicatorTheme: const ProgressIndicatorThemeData(
+    color: Colors.white,
+  ),
   useMaterial3: true,
 );
 
@@ -26,6 +29,9 @@ ThemeData darkMode = ThemeData(
     titleMedium: TextStyle(
       color: Colors.black,
     ),
+  ),
+  progressIndicatorTheme: ProgressIndicatorThemeData(
+    color: Colors.grey.shade900,
   ),
   useMaterial3: true,
 );
