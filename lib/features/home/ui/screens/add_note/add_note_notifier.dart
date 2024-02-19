@@ -8,12 +8,14 @@ class AddNoteNotifier extends ChangeNotifier {
   final TextEditingController contentController = TextEditingController();
   bool addingNoteLoader = false;
   late NoteEntity? note;
+  int? noteColor;
 
   void init(NoteEntity? noteEntity) {
     if (noteEntity != null) {
       note = noteEntity;
       titleController.text = noteEntity.title;
       contentController.text = noteEntity.content;
+      noteColor = noteEntity.colorId;
     }
   }
 
@@ -26,7 +28,7 @@ class AddNoteNotifier extends ChangeNotifier {
       "title": titleController.text,
       "content": contentController.text,
       "created_at": DateTime.now().toString(),
-      "color_id": 1,
+      "color_id": noteColor ?? 0,
     });
   }
 
@@ -36,11 +38,16 @@ class AddNoteNotifier extends ChangeNotifier {
     await FirebaseFirestore.instance.collection("notes").doc(note!.id).update({
       "title": titleController.text,
       "content": contentController.text,
-      "color_id": 1,
+      "color_id": noteColor ?? 0,
     });
   }
 
   void deleteNote() async {
     await FirebaseFirestore.instance.collection("notes").doc(note!.id).delete();
+  }
+
+  void updateNoteColor(int colorId) {
+    noteColor = colorId;
+    notifyListeners();
   }
 }
