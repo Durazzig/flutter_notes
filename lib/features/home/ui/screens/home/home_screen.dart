@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_notes/features/home/domain/entities/note_entity.dart';
+import 'package:flutter_notes/features/home/ui/screens/add_note/add_note_notifier.dart';
 import 'package:flutter_notes/features/home/ui/screens/add_note/add_note_screen.dart';
 import 'package:flutter_notes/features/home/ui/screens/home/home_notifier.dart';
 import 'package:flutter_notes/features/home/ui/widgets/note_card.dart';
@@ -31,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.background,
         title:
-            const Align(alignment: Alignment.centerLeft, child: Text("Home")),
+            const Align(alignment: Alignment.centerLeft, child: Text("Notes")),
         actions: const [
           ThemeButton(),
           SignOutButton(),
@@ -84,8 +85,11 @@ class _HomeScreenState extends State<HomeScreen> {
           final navigator = Navigator.of(context);
           navigator.push(
             MaterialPageRoute(
-              builder: (context) => const AddNoteScreen(
-                isUpdate: false,
+              builder: (context) => ChangeNotifierProvider(
+                create: (context) => AddNoteNotifier(),
+                child: const AddNoteScreen(
+                  isUpdate: false,
+                ),
               ),
             ),
           );
