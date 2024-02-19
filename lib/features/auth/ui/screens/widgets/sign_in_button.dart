@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_notes/features/auth/ui/screens/sign_in/sign_in_notifier.dart';
 import 'package:flutter_notes/features/home/ui/screens/home/home_notifier.dart';
 import 'package:flutter_notes/features/home/ui/screens/home/home_screen.dart';
 import 'package:flutter_notes/features/shared/firebase_auth_provider.dart';
+import 'package:flutter_notes/ui/widgets/alerts.dart';
 import 'package:provider/provider.dart';
 
 class SignInButton extends StatelessWidget {
@@ -51,15 +51,15 @@ class SignInButton extends StatelessWidget {
 
     signInNotifier.isLoading();
 
-    User? user = await firebaseProvider.signInWithEmailAndPassword(
+    final response = await firebaseProvider.signInWithEmailAndPassword(
       email: signInNotifier.emailController.text,
       password: signInNotifier.passwordController.text,
     );
 
     signInNotifier.isLoading();
 
-    if (user != null) {
-      navigator.pushAndRemoveUntil(
+    response.when(
+      (success) => navigator.pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider(
             create: (context) => HomeNotifier(),
@@ -67,7 +67,20 @@ class SignInButton extends StatelessWidget {
           ),
         ),
         (Route<dynamic> route) => false,
-      );
-    }
+      ),
+      (error) => Alerts.showAlert(
+        context: context,
+        title: "Oops",
+        body: Column(
+          children: [
+            Text(
+              error.msg,
+            ),
+          ],
+        ),
+        primaryButtonText: "Ok",
+        onPrimaryButtonPressed: () => Navigator.pop(context),
+      ),
+    );
   }
 }
